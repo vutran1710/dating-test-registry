@@ -11,13 +11,11 @@ This repo is a directory of dating pools. Pool operators register their pools he
 ```
 pools/
   {pool-name}/
-    pool.json       Pool metadata, operator public key, OAuth client IDs
-    tokens.bin      Base64-encoded GitHub PAT for the pool repo
+    pool.json       Pool metadata + operator public key
+    tokens.bin      GitHub PAT encrypted to operator's pubkey (NaCl box)
 ```
 
 ## pool.json
-
-Each pool entry contains:
 
 ```json
 {
@@ -25,8 +23,6 @@ Each pool entry contains:
   "repo": "owner/berlin-singles",
   "description": "Dating pool for Berlin tech community",
   "operator_public_key": "abc123...",
-  "github_client_id": "Iv1.xxx",
-  "google_client_id": "123.apps.googleusercontent.com",
   "relay_url": "wss://relay.example.com",
   "created_at": "2026-03-14T12:00:00Z"
 }
@@ -34,13 +30,9 @@ Each pool entry contains:
 
 ## tokens.bin
 
-The `tokens.bin` file contains a base64-encoded JSON payload:
+The pool's GitHub PAT, encrypted to the operator's public key using NaCl box. Only the relay server (which holds the operator's private key) can decrypt it.
 
-```json
-{"gh_token": "github_pat_xxx"}
-```
-
-This token is used by the relay server to access the pool repo's GitHub API (avoids the 60 req/hr anonymous limit).
+The relay uses this token to access the pool repo's GitHub API for fetching user profiles during discovery.
 
 ## For Users
 
@@ -51,7 +43,7 @@ curl -sSL https://dating.dev/install.sh | sh
 # Browse pools
 dating pool browse
 
-# Join a pool
+# Join a pool (uses your GitHub account via `gh` CLI or PAT)
 dating pool join berlin-singles
 ```
 
@@ -62,12 +54,11 @@ dating pool join berlin-singles
 dating pool create my-pool \
   --repo owner/my-pool \
   --gh-token github_pat_xxx \
-  --github-client-id Iv1.xxx \
   --relay-url wss://relay.example.com \
   --registry-token github_pat_yyy
 ```
 
-This creates a PR to this registry with `pools/{name}/pool.json` and `pools/{name}/tokens.bin`. The maintainer reviews and merges it.
+This creates a PR to this registry with `pools/{name}/pool.json` and an encrypted `pools/{name}/tokens.bin`. The maintainer reviews and merges it.
 
 ## Running Your Own Registry
 
