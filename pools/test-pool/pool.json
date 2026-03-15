@@ -1,0 +1,10 @@
+{
+  "name": "test-pool",
+  "repo": "vutran1710/dating-test-pool",
+  "description": "A test dating pool for development and testing",
+  "operator_public_key": "33178b91a9b52ad8c38c64fd088f6b8bcabb90969bd40b0dc0e5d6bf97e7e8d2",
+  "github_client_id": "",
+  "google_client_id": "",
+  "relay_url": "ws://localhost:8081",
+  "created_at": "2026-03-15T00:00:00Z"
+}
