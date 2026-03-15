@@ -1,6 +1,6 @@
-# dating-pool-registry
+# dating-test-registry
 
-Official pool registry for [dating.dev](https://dating.dev).
+Test pool registry for [dating.dev](https://dating.dev) — a decentralized, terminal-native dating platform.
 
 ## What is this?
 
@@ -12,10 +12,12 @@ This repo is a directory of dating pools. Pool operators register their pools he
 pools/
   {pool-name}/
     pool.json       Pool metadata, operator public key, OAuth client IDs
-    tokens.bin      Serialized GitHub PAT for the pool repo
+    tokens.bin      Base64-encoded GitHub PAT for the pool repo
 ```
 
 ## pool.json
+
+Each pool entry contains:
 
 ```json
 {
@@ -29,6 +31,16 @@ pools/
   "created_at": "2026-03-14T12:00:00Z"
 }
 ```
+
+## tokens.bin
+
+The `tokens.bin` file contains a base64-encoded JSON payload:
+
+```json
+{"gh_token": "github_pat_xxx"}
+```
+
+This token is used by the relay server to access the pool repo's GitHub API (avoids the 60 req/hr anonymous limit).
 
 ## For Users
 
@@ -55,7 +67,7 @@ dating pool create my-pool \
   --registry-token github_pat_yyy
 ```
 
-This creates a PR to this registry. The maintainer reviews and merges it.
+This creates a PR to this registry with `pools/{name}/pool.json` and `pools/{name}/tokens.bin`. The maintainer reviews and merges it.
 
 ## Running Your Own Registry
 
@@ -64,4 +76,3 @@ Anyone can run their own registry. Fork this repo and point the CLI at it:
 ```bash
 dating pool browse --registry your-org/your-registry
 ```
-
