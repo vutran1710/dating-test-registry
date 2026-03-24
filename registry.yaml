@@ -4,5 +4,5 @@ accent: violet
 version: 1
 
 pools:
-  - name: test-pool
-    repo: vutran1710/dating-test-pool
+  - name: "<3 dating"
+    repo: vutran1710/openpool-base-pool
